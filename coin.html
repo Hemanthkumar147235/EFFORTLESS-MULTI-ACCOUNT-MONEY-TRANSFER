@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Generator</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body>
+    <h1>QR Code Generator</h1>
+    <label for="name1">Name 1:</label>
+    <input type="text" id="name1" placeholder="Enter Name 1">
+    <br>
+    <label for="amount1">Amount 1:</label>
+    <input type="number" id="amount1" placeholder="Enter Amount 1">
+    <br>
+    <label for="name2">Name 2:</label>
+    <input type="text" id="name2" placeholder="Enter Name 2">
+    <br>
+    <label for="amount2">Amount 2:</label>
+    <input type="number" id="amount2" placeholder="Enter Amount 2">
+    <br>
+    <button id="generateButton">Generate QR Code</button>
+    <div id="qrcode"></div>
+
+    <script>
+        const generateButton = document.getElementById("generateButton");
+        const qrcodeDiv = document.getElementById("qrcode");
+
+        generateButton.addEventListener("click", () => {
+            const name1 = document.getElementById("name1").value;
+            const amount1 = document.getElementById("amount1").value;
+            const name2 = document.getElementById("name2").value;
+            const amount2 = document.getElementById("amount2").value;
+
+            // Combine names and amounts
+            const combinedData = `Name 1: ${name1}\nAmount 1: ${amount1}\nName 2: ${name2}\nAmount 2: ${amount2}`;
+
+            // Clear existing QR code
+            qrcodeDiv.innerHTML = "";
+
+            // Generate QR code
+            const qrcode = new QRCode(qrcodeDiv, {
+                text: combinedData,
+                width: 128,
+                height: 128,
+            });
+        });
+    </script>
+</body>
+</html>

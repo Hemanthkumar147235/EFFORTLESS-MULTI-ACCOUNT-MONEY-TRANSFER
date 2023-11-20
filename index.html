@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Scanner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    #app {
+      margin: 50px auto;
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    #video-container {
+      width: 100%;
+      position: relative;
+    }
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    #canvas-container {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <h2>QR Code Scanner</h2>
+  <div id="video-container">
+    <video id="video" playsinline autoplay></video>
+  </div>
+  <div id="canvas-container">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div id="output">
+    <h3>QR Code Data</h3>
+    <ul id="qrData"></ul>
+  </div>
+  <br>
+  <label for="cc">tom:</label>
+  <input id="number" type="number" value="50" />
+  <br>
+  <br>
+  <label for="cc">jerry</label>
+  <input id="number1" type="number" value="50" />
+  <br>
+</div>
+
+<script>
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("canvas");
+  const canvasContext = canvas.getContext("2d");
+  const qrDataList = document.getElementById("qrData");
+  const num=document.getElementById("number");
+  const num1=document.getElementById("number1");
+  // Initialize the camera stream
+  async function initializeCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      video.srcObject = stream;
+    } catch (error) {
+      console.error("Error accessing the camera:", error);
+    }
+  }
+
+  // Initialize camera and start scanning
+  initializeCamera();
+
+  // Handle successful scans
+  function onScanSuccess(decodedText) {
+    // Display the detected content in an alert
+    alert("Scanned QR code content: " + decodedText);
+    // The input sentence
+// The input sentence
+const sentence = decodedText;
+
+// Regular expression pattern to match "Amount 1:" and capture the text after it
+const pattern = /Amount 1:\s*(\S+)/;
+const pattern1 = /Amount 2:\s*(\S+)/;
+// Use the pattern to find a match in the sentence
+const match = sentence.match(pattern);
+const match1 = sentence.match(pattern1);
+if (match) {
+  const amountText = match[1];
+  // Parse amountText as an integer
+  const amount = parseInt(amountText, 10);
+  if (!isNaN(amount)) {
+    // Add the parsed amount to num.value
+    num.value = parseInt(num.value, 10) + amount;
+  }
+}
+if (match1) {
+  const amountText1 = match1[1];
+  // Parse amountText as an integer
+  const amount1 = parseInt(amountText1, 10);
+  if (!isNaN(amount1)) {
+    // Add the parsed amount to num.value
+    num1.value = parseInt(num1.value, 10) + amount1;
+  }
+}
+
+
+    alert ()
+    // Display name and amount in the same list item
+    const listItem = document.createElement("li");
+    listItem.textContent = decodedText;
+    qrDataList.appendChild(listItem);
+  }
+
+
+
+
+
+  // Continuous scan of video stream
+  async function scan() {
+    canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
+
+    // Use jsQR library to decode the QR code
+    const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+    if (code) {
+      onScanSuccess(code.data);
+    }
+
+    requestAnimationFrame(scan);
+  }
+
+  // Start scanning
+  video.addEventListener("play", () => {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    scan();
+  });
+  // function onScanSuccess(decodedText){
+  //   if (decodedText === "Tom"){
+  //     num.value=20;
+  //   }
+  // }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr"></script>
+</body>
+</html>
+
